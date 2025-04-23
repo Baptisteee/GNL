@@ -3,43 +3,67 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: babodere <babodere@42.fr>                  +#+  +:+       +#+        */
+/*   By: babodere <babodere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/13 17:52:32 by babodere          #+#    #+#             */
-/*   Updated: 2025/04/20 11:22:42 by babodere         ###   ########.fr       */
+/*   Created: 2025/04/23 08:38:52 by babodere          #+#    #+#             */
+/*   Updated: 2025/04/23 19:54:33 by babodere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_strlen(const char *str)
+size_t  ft_strlen(const char *str)
 {
-	int	count;
+    int count;
 
-	count = 0;
-	while (str[count])
-		count++;
-	return (count);
+	if (!str)
+		return (0);
+    count = 0;
+    while (str[count])
+        count++;
+    return (count);
 }
 
-size_t	ft_strlcpy(char *dest, const char *src, size_t size)
+void	ft_bzero(void *s, size_t n)
 {
-	size_t	index;
-	size_t	src_size;
+	unsigned char	*array;
 
-	index = 0;
-	src_size = ft_strlen(src);
-	if (!dest || !src)
-		return (0);
-	if (size == 0)
-		return (src_size);
-	while (src[index] && index < size - 1)
+	if (n == 0 || !s)
+		return ;
+	array = (unsigned char *)s;
+	while (n--)
+		*array++ = 0;
+}
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	unsigned char	*array;
+
+	if (n == 0 || !s)
+		return (NULL);
+
+	array = (unsigned char *) s;
+	while (n--)
+		*array++ = c;
+	return (s);
+}
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	unsigned char	*s;
+	size_t			i;
+
+
+	s = (unsigned char *)src;
+	i = 0;
+	if (!dest && !src)
+		return (NULL);
+	while (i < n)
 	{
-		dest[index] = src[index];
-		index++;
+		ft_memset((dest + i), *(s + i), 1);
+		++i;
 	}
-	dest[index] = '\0';
-	return (src_size);
+	return (dest);
 }
 
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
@@ -47,6 +71,9 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	size_t	i;
 	size_t	srclen;
 	size_t	dstlen;
+
+	if (!dst || !src || size == 0)
+		return 0;
 
 	srclen = ft_strlen(src);
 	dstlen = ft_strlen(dst);
@@ -62,31 +89,26 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	return (dstlen + srclen);
 }
 
-int	is_newline(char *stash)
+int check_retval(char stash[BUFFER_SIZE + 1], char *retval)
 {
-	int	index;
+	int	s_index;
+	int	r_index;
+	int	line;
 
-	index = 0;
-	while (stash[index])
-	{
-		if (stash[index] == '\n')
-			return (index);
-		index++;
-	}
-	return (-1);
-}
-
-char	*ft_export_stash(char *stash, char buff[BUFFER_SIZE], int expand)
-{
-	char	*new_stash;
-	int		stash_size;
-
-	stash_size = ft_strlen(stash);
-	new_stash = (char *) malloc(sizeof(char) * (stash_size + expand + 1));
-	if (!new_stash)
-		return (NULL);
-	ft_strlcpy(new_stash, (const char *) stash, stash_size);
-	ft_strlcat(new_stash, (const char *) buff, expand + 1);
-	free(stash);
-	return (new_stash);
+    s_index = 0;
+    r_index = 0;
+    line = 0;
+    while (retval[r_index])
+    {
+        if (line == 1)
+        {
+            stash[s_index++] = retval[r_index];
+            retval[r_index] = '\0';
+        }
+        if (retval[r_index] == '\n')
+            line = 1;
+        r_index++;
+    }
+    stash[s_index] = '\0';
+    return (line);
 }

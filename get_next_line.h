@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: babodere <babodere@42.fr>                  +#+  +:+       +#+        */
+/*   By: babodere <babodere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 17:17:59 by babodere          #+#    #+#             */
-/*   Updated: 2025/04/20 13:50:28 by babodere         ###   ########.fr       */
+/*   Updated: 2025/04/23 19:56:15 by babodere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 # define GET_NEXT_LINE_H
 
-#ifndef BUFFER_SIZE
-
-# define BUFFER_SIZE 256
-
-#endif
+# ifndef BUFFER_SIZE
+# define BUFFER_SIZE 15
+# endif
 
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
 
-int		is_newline(char *stash);
+size_t	    ft_strlen(const char *str);
 char	*get_next_line(int fd);
-char	*ft_export_stash(char *stash, char buff[BUFFER_SIZE], int expand);
-size_t	ft_strlcpy(char *dest, const char *src, size_t size);
+void	ft_bzero(void *s, size_t n);
+int	    check_retval(char stash[BUFFER_SIZE + 1], char *retval);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+size_t	ft_strlcat(char *dst, const char *src, size_t size);
 
 #endif
