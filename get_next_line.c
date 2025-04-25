@@ -6,7 +6,7 @@
 /*   By: babodere <babodere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 17:17:33 by babodere          #+#    #+#             */
-/*   Updated: 2025/04/23 22:25:23 by babodere         ###   ########.fr       */
+/*   Updated: 2025/04/25 16:23:09 by babodere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,13 @@ char	*ft_realloc(char *str, int size)
 	int		str_size;
 
 	if (!str)
-		return (malloc(sizeof(char) * size));	
-	str_size = ft_strlen((const char *) str);
-	retval = (char *) malloc(sizeof(char) * (str_size + size));
+		return (malloc(sizeof(char) * size));
+	str_size = ft_strlen((const char *)str);
+	retval = (char *)malloc(sizeof(char) * (str_size + size));
 	if (!retval)
 		return (free(str), NULL);
-	ft_bzero(retval, str_size + size);
-	ft_memcpy((void *) retval, (const void *) str, str_size);
+	ft_strcpy((void *)retval, str);
 	free(str);
-	str = NULL;
 	return (retval);
 }
 
@@ -35,69 +33,45 @@ char	*init_retval(char stash[BUFFER_SIZE + 1])
 {
 	char	*retval;
 	int		malloc_size;
-	
+
 	if (stash[0] != '\0')
 		malloc_size = ft_strlen(stash) + 1;
 	else
 		malloc_size = 1;
-	retval = (char *) malloc(sizeof(char) * malloc_size);
+	retval = (char *)malloc(sizeof(char) * malloc_size);
 	if (!retval)
 		return (NULL);
-	ft_bzero(retval, malloc_size);
+	retval[0] = '\0';
 	if (stash[0] != '\0')
-		retval = (char *) ft_memcpy(retval, (const char *) stash, malloc_size);
+		retval = (char *)ft_strcpy(retval, stash);
 	return (retval);
 }
 
 char	*get_next_line(int fd)
 {
-	char		buff[BUFFER_SIZE];
-	static char	stash[1024][BUFFER_SIZE + 1];
+	char		buff[BUFFER_SIZE + 1];
+	static char	stash[BUFFER_SIZE + 1];
 	char		*retval;
 	int			r;
 
-	if (fd < 0 || fd > 1024)
-		return (NULL);
-	ft_bzero(buff, BUFFER_SIZE);
 	r = 1;
-	retval = init_retval(stash[fd]);
-	if (!retval)
-		return (NULL);
+	retval = init_retval(stash);
+	if (fd < 0 || fd > 1024 || !retval)
+		return (free(retval), stash[0] = 0, NULL);
 	while (r > 0)
 	{
 		r = read(fd, buff, BUFFER_SIZE);
+		buff[r] = '\0';
 		if (r < 0)
 			break ;
 		retval = ft_realloc(retval, r + 1);
 		if (!retval)
-			return (NULL);
-		ft_strlcat(retval, (const char *) buff, ft_strlen(retval) + r + 1);
-		if (check_retval(stash[fd], retval) == 1)
-			return (retval);
-		if (r == 0)
-			return(retval);
+			return (stash[0] = 0, NULL);
+		ft_strcat(retval, (const char *)buff);
+		if (retval[0] == 0)
+			return (stash[0] = 0, free(retval), NULL);
+		if (check_retval(stash, retval) == 1 || r == 0)
+			return (ft_strdup(retval));
 	}
-	return (NULL);
+	return (stash[0] = 0, free(retval), NULL);
 }
-
-// int	main(int ac, char **av)
-// {
-// 	(void) ac;
-// 	int	fd;
-// 	int	fd2;
-	
-// 	fd = open(av[1], O_RDONLY);
-// 	fd2 = open(av[2], O_RDONLY);
-// 	char *s = get_next_line(fd);
-// 	printf("%s", s);
-// 	free(s);
-// 	s = get_next_line(fd2);
-// 	printf("%s", s);
-// 	free(s);
-// 	s = get_next_line(fd);
-// 	printf("%s", s);
-// 	free(s);
-// 	s = get_next_line(fd2);
-// 	printf("%s", s);
-// 	free(s);
-// }
