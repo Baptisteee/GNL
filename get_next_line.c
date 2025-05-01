@@ -6,7 +6,7 @@
 /*   By: babodere <babodere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 17:17:33 by babodere          #+#    #+#             */
-/*   Updated: 2025/04/25 23:32:42 by babodere         ###   ########.fr       */
+/*   Updated: 2025/05/02 01:22:38 by babodere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,25 +49,24 @@ char	*init_retval(char stash[BUFFER_SIZE + 1])
 
 char	*get_next_line(int fd)
 {
-	char		buff[BUFFER_SIZE + 1];
 	static char	stash[BUFFER_SIZE + 1];
 	char		*retval;
 	int			r;
 
 	r = 1;
 	retval = init_retval(stash);
-	if (fd < 0 || fd > 1024 || !retval)
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0 || !retval)
 		return (free(retval), stash[0] = 0, NULL);
 	while (r > 0)
 	{
-		r = read(fd, buff, BUFFER_SIZE);
-		buff[r] = '\0';
+		r = read(fd, stash, BUFFER_SIZE);
+		stash[r] = '\0';
 		if (r < 0)
 			break ;
 		retval = ft_realloc(retval, r + 1);
 		if (!retval)
 			return (stash[0] = 0, NULL);
-		ft_strcat(retval, (const char *)buff);
+		ft_strcat(retval, (const char *)stash);
 		if (retval[0] == 0)
 			return (stash[0] = 0, free(retval), NULL);
 		if (check_retval(stash, retval) == 1 || r == 0)

@@ -6,7 +6,7 @@
 /*   By: babodere <babodere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 08:38:52 by babodere          #+#    #+#             */
-/*   Updated: 2025/04/25 19:46:48 by babodere         ###   ########.fr       */
+/*   Updated: 2025/05/02 00:56:49 by babodere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ char	*ft_strdup(char *s)
 	char	*retval;
 	int		s_size;
 
+	if (!s)
+		return (NULL);
 	s_size = ft_strlen(s);
 	retval = (char *)malloc(sizeof(char) * (s_size + 1));
 	if (!retval)
