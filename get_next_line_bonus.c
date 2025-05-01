@@ -6,12 +6,11 @@
 /*   By: babodere <babodere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 17:17:33 by babodere          #+#    #+#             */
-/*   Updated: 2025/05/02 01:28:14 by babodere         ###   ########.fr       */
+/*   Updated: 2025/05/02 01:45:05 by babodere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-#include <stdio.h>
+#include "get_next_line_bonus.h"
 
 char	*ft_realloc(char *str, int size)
 {
